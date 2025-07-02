@@ -1,17 +1,22 @@
 import json
-
 import requests
 
+# Base URL of your running FastAPI application
+BASE_URL = "http://127.0.0.1:8000"
+
+# --- Test GET endpoint ---
+print("--- Testing GET / ---")
 # TODO: send a GET using the URL http://127.0.0.1:8000
-r = None # Your code here
+r = requests.get(BASE_URL) # Your code here
 
 # TODO: print the status code
-# print()
+print(f"Status Code for GET /: {r.status_code}")
 # TODO: print the welcome message
-# print()
+print(f"Welcome Message (GET /): {r.json().get('message', 'No message found')}\n")
 
 
-
+# --- Test POST endpoint for inference ---
+print("--- Testing POST /data/ ---")
 data = {
     "age": 37,
     "workclass": "Private",
@@ -30,9 +35,15 @@ data = {
 }
 
 # TODO: send a POST using the data above
-r = None # Your code here
+# requests.post's json parameter automatically handles converting the dict to JSON
+# and setting the Content-Type header.
+r = requests.post(f"{BASE_URL}/data/", json=data) # Your code here
 
 # TODO: print the status code
-# print()
+print(f"Status Code for POST /data/: {r.status_code}")
 # TODO: print the result
-# print()
+# Check if the request was successful before trying to parse JSON
+if r.status_code == 200:
+    print(f"Inference Result (POST /data/): {r.json().get('prediction', 'No prediction found')}")
+else:
+    print(f"Error Response (POST /data/): {r.text}")
